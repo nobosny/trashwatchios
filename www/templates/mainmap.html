@@ -1,0 +1,22 @@
+<ion-view view-title="Map">
+
+    <!--<ion-nav-bar class="bar-dark">
+        <ion-nav-back-button>
+        </ion-nav-back-button>
+    </ion-nav-bar>-->
+
+    <ion-pane>
+
+        <ion-content ng-init="init()">
+            <div id="mainmap" data-tap-disabled="true"></div>
+        </ion-content>
+
+        <ion-footer-bar class="bar-positive">
+            <div class="buttons button-bar">
+                <button class="button icon button-clear ion-ios-navigate-outline" ng-click="centerOnMe()"></button>
+                <button class="button icon button-clear ion-ios-refresh-empty"></button>
+                <a class="button icon button-clear ion-ios-plus-empty" href="#/newsite"></a>
+            </div>
+        </ion-footer-bar>
+    </ion-pane>
+</ion-view>
