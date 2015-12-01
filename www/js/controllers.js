@@ -39,6 +39,7 @@ angular.module('starter.controllers', [])
 
             $ionicLoading.hide();
         }, function(error) {
+            $ionicLoading.hide();
             alert('Unable to get location: ' + error.message);
         });
     };
