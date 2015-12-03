@@ -1,6 +1,6 @@
-angular.module('starter.controllers', [])
+angular.module('starter.controllers', ['ngCordova'])
 
-.controller('MapCtrl', function($scope, $ionicLoading) {
+.controller('MapCtrl', function($scope, $ionicLoading, $cordovaGeolocation) {
 
     var userMarker;
 
@@ -14,34 +14,38 @@ angular.module('starter.controllers', [])
             showBackdrop: false
         });
 
-        navigator.geolocation.getCurrentPosition(function(pos) {
-            if(userMarker != null) {
-                userMarker.setMap(null);
-            }
-            var userLocation = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
-
-            $scope.map.setCenter(userLocation);
-
-            userMarker = new google.maps.Marker({
-                position: userLocation,
-                map: $scope.map,
-                title: 'User Location',
-                draggable: true,
-                icon: {
-                    path: google.maps.SymbolPath.CIRCLE,
-                    scale: 5,
-                    strokeColor: '#800808',
-                    strokeWeight: 1,
-                    fillColor: 'red',
-                    fillOpacity: 1.0
+        var posOptions = { timeout: 10000, enableHighAccuracy: false };
+        $cordovaGeolocation.getCurrentPosition(posOptions)
+            .then(function(pos) {
+                if(userMarker != null) {
+                    userMarker.setMap(null);
                 }
-            });
+                var userLocation = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
 
-            $ionicLoading.hide();
-        }, function(error) {
-            $ionicLoading.hide();
-            alert('Unable to get location: ' + error.message);
-        });
+                $scope.map.setCenter(userLocation);
+
+                userMarker = new google.maps.Marker({
+                    position: userLocation,
+                    map: $scope.map,
+                    title: 'User Location',
+                    draggable: true,
+                    icon: {
+                        path: google.maps.SymbolPath.CIRCLE,
+                        scale: 5,
+                        strokeColor: '#800808',
+                        strokeWeight: 1,
+                        fillColor: 'red',
+                        fillOpacity: 1.0
+                    }
+                });
+
+                $ionicLoading.hide();
+
+          }, function(err) {
+                $ionicLoading.hide();
+                alert('Unable to get location: ' + error.message);
+          });
+
     };
 
     ionic.Platform.ready(function () {
@@ -58,11 +62,17 @@ angular.module('starter.controllers', [])
         $scope.centerOnMe();
     });
 
-    $scope.newCase = function() {
-        $scope.modalNewCase.show();
-    };
-
 })
-.controller('NewSiteCtrl', function() {
+.controller('NewSiteCtrl', function($scope, $ionicHistory, $toast, $timeout) {
   /* New Trash Site Actions */
+  $scope.submitReport = function() {
+    $toast.showShortBottom("Submitting your report...");
+    $ionicHistory.goBack();
+
+    $timeout(function() {
+         $toast.showShortBottom("Your report has been successfully submitted.");
+      }, 5000);
+
+
+  };
 });
